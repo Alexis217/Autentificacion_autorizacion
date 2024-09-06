@@ -1,5 +1,5 @@
 (async () => {
-    const response = await fetch('http://localhost:4000/session', {
+    const response = await fetch('http://localhost:4000/auth/session', {
         method: 'GET',
         credentials: 'include' // Importante para enviar las cookies de sesión
     })
@@ -19,7 +19,7 @@
 
 // Manejar el cierre de sesión
 document.getElementById('logout').addEventListener('click', async () => {
-    const response = await fetch('http://localhost:4000/logout', {
+    const response = await fetch('http://localhost:4000/auth/logout', {
         method: 'POST',
         credentials: 'include'
     })

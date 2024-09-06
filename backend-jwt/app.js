@@ -4,10 +4,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import cors from 'cors';
 import { PORT } from './config/env.js';
-import generarJwt from './helpers/generar-jwt.js';
-import validarJwt from './middlewares/validar-jwt.js';
 import morgan from 'morgan';
-import { newConnection } from './db/database.js';
+import { Elrouter } from './routes/auth.routes.js';
 
 
 const app = express();
@@ -27,30 +25,7 @@ app.use(session({
     cookie: { secure: false } // Usar 'true' si usas HTTPS
 }));
 
-
-
-// Endpoint para validar la sesión
-app.get('/session', validarJwt, (req, res) => {
-    console.log(req.user);
-    return res.json({ message: 'Acceso permitido a área protegida', user: req.user });
-});
-
-// Endpoint de cierre de sesión (logout)
-app.post('/logout', (req, res) => {
-    try {
-        req.session.destroy(err => {
-            if (err) {
-                return res.status(500).json({ message: 'Error al cerrar sesión' });
-            }
-
-            res.clearCookie('authToken');
-            return res.json({ message: 'Cierre de sesión exitoso' });
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Error Inesperado' });
-    }
-});
+app.use('/auth', Elrouter);
 
 // Servidor escuchando
 app.listen(PORT, () => {
